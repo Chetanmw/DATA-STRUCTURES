@@ -1,177 +1,179 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef struct dll
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct d
 {
-    int n;
-    struct dll *next;
-    struct dll *bot;
-}  *node;
- node insert_next(node head);
-node getnode ();
- node insert_bot(node head);
- void display(node head);
- void sort(node head);
 
+    int id;
+    struct d *next;
+    struct d *link;
+};
 
-int main()
+typedef struct d *NODE;
+
+NODE getnode()
 {
-    int choice;
-   node head =NULL;
-   while(1)
-   {
-       printf("enter 1.insert_next\t2.insert_bottom\t3.display\t4.sort_flat_display\t5.exit\n");
-       scanf("%d",&choice);
-       switch(choice)
-       {
-       case 1:
-        head=insert_next(head);
-        break;
-       case 2:
-        head=insert_bot(head);
-        break;
-        case 3:
-        display(head);
-        break;
-         case 4:
-        sort(head);
-        break;
-        case 5:
+    NODE newn;
+    newn=(NODE)malloc(sizeof(struct d));
+    if(newn==NULL)
+    {
+        printf("NOT CREATED");
         exit(0);
-        break;
-        default:
-            printf("invalid option \n");
-       }
-   }
-    return 0;
+    }
+    newn->next=NULL;
+    return newn;
 }
 
-node getnode ()
- {
-     node new1;
-     new1=(node) malloc(sizeof (struct dll));
-     new1->next=NULL;
-     new1->bot=NULL;
-     printf("enter n\n");
-     scanf("%d",&new1->n);
-     return new1;
- }
- node getnode2 ()
- {
-     node new1;
-     new1=(node) malloc(sizeof (struct dll));
-     new1->next=NULL;
-     new1->bot=NULL;
-     return new1;
- }
- node insert_next(node head)
- {
-     node cur=head;
-     node new1=getnode();
-     if(head==NULL)
-     return new1;
-     while(cur->next!=NULL)
-     {
-         cur=cur->next;
-     }
-     cur->next=new1;
-     new1->next=NULL;
-     return head;
- }
- node insert_bot(node head)
- {
-     node cur=head;
-     while(cur->next!=NULL)
-        cur=cur->next;
-        while(cur->bot!=NULL)
-            cur=cur->bot;
-     node new1=getnode();
-     cur->bot=new1;
-     return head;
- }
- void display(node head)
+NODE read_details()
 {
-    node cur=head;
-    if(head==NULL)
-    printf("list is empty\n");
+    NODE temp;
+    temp=getnode();
+    printf("ENTER ID:\n");
+    scanf("%d",&temp->id);
+    return temp;
+}
+
+NODE insert_end(NODE head)
+{
+    NODE newn=NULL, cur=NULL;
+    newn = read_details();
+    if(head == NULL)
+    {
+        return newn;
+    }
     else
     {
-        printf("your data in the list is:\n ");
+        cur=head;
+        while(cur->next != NULL)
+            cur = cur->next;
+        cur->next = newn;
+    }
+    return head;
+}
+void display(NODE head)
+{
+    NODE cur=NULL;
+    if(head==NULL)
+    {
+        printf("LIST EMPTY\n");
+        exit(0);
+    }
+    else
+    {
+        cur=head;
+        printf("DETAILS\n");
+        printf("EMPLOYERS id");
+        printf("head-> ");
         while(cur!=NULL)
         {
-            printf("%d--",cur->n);
-            node b=cur;
-            b=b->bot;
-            while(b!=NULL)
-            {
-             printf("%d --",b->n);
-             b=b->bot;
-            }
-            printf("\nv");
-            printf("\n");
+            printf("%d -> ", cur->id);
             cur=cur->next;
         }
+        printf("NULL\n");
     }
 }
- void sort(node head)
- {
-     node cur=head;
-     node tali=getnode2();
-     tali->next=NULL;
-     node naya=tali;
-       while(cur!=NULL)
-        {
-            naya->n=cur->n;
-            node b=cur;
-            b=b->bot;
-            node new1=getnode2();
-            new1->next=NULL;
-            naya->next=new1;
-            naya=new1;
-            while(b!=NULL)
-            {
-             naya->n=b->n;
-             node new2=getnode2();
-             new2->next=NULL;
-            naya->next=new2;
-            naya=new2;
-             b=b->bot;
-            }
-            cur=cur->next;
-        }
-        cur=tali;
-        printf("sorted list is:\n ");
-        while(cur->next!=NULL)
-        {
-            printf("%d \n",cur->n);
-            cur=cur->next;
-        }
-cur=tali;
-node prev =NULL;
- int x=0;
-    while(cur!=NULL&&cur->next!=NULL)
+NODE sort(NODE head)
+{
+    NODE ind,cur=head;
+    int temp;
+    while(cur!=NULL)
     {
-        prev = cur;
-        cur=cur->next;
-        node cur2=prev;
-        while(cur2!=NULL&&cur2->next!=NULL)
-        {
 
-            if(prev->n > cur2->n)
+        ind=cur->next;
+        while(ind!=NULL)
+        {
+            if(cur->id>=ind->id)
             {
-                 x=prev->n;
-                prev->n=cur2->n;
-                cur2->n=x;
-             }
-             cur2=cur2->next;
+                temp=cur->id;
+                cur->id=ind->id;
+                ind->id=temp;
+            }
+            ind=ind->next;
         }
+        cur=cur->next;
     }
-    cur=tali;
-        printf("sorted list is:\n ");
-        while(cur->next!=NULL)
-        {
-            printf("%d \n",cur->n);
-            cur=cur->next;
-        }
+    return head;
+}
+NODE merge(NODE head,NODE second)
+{
+    NODE cur;
+    cur=head;
+    while(cur->next!=NULL)
+    {
+        cur=cur->next;
+    }
+    cur->next=second;
+    return head;
+}
+NODE link(NODE head,NODE head1,NODE head2,NODE head3)
+{
+    NODE temp=head,cur;
+    head->link=head1;
+    head1->link=head2;
+    head2->link=head3;
+    head3->link=NULL;
+  while(temp!=NULL)
+  {
+      printf("%d\t",cur->id);
+       cur=temp;
+       cur=cur->link;
+       while(cur!=NULL)
+       {
+           printf("%d\t",cur->id);
+           cur=cur->link;
+       }
+       printf("\n");
+       temp=temp->next;
 
- }
+  }
+  return head;
+
+
+}
+int main()
+{
+    NODE head=NULL,head1=NULL,head2=NULL,head3=NULL;
+     int choice,cnt;
+        printf("1 insert in 1st list ,2 insert in 2nd list, 3 insert in 3rd list ,4 insert in 4th list 5 display 1st list ,6 display 2nd list, 7 display 3rd list ,8 display 4th list,9 merge,10 sort");
+        while(1)
+        {
+            printf("ENTER CHOICE:\t");
+            scanf("%d",&choice);
+            switch(choice)
+            {
+                case 1:head=insert_end(head);
+                       break;
+                case 2:head1=insert_end(head1);
+                       break;
+                 case 3:head2=insert_end(head2);
+                       break;
+                  case 4:head3=insert_end(head3);
+                        break;
+                  case 5:display(head);
+                        break;
+                  case 6:display(head1);
+                        break;
+                  case 7:display(head2);
+                         break;
+                  case 8:display(head3);
+                         break;
+                  case 9:head=merge(head,head1);
+                        head1=NULL;
+                        head=merge(head,head2);
+                        head2=NULL;
+                        head=merge(head,head3);
+                        head3=NULL;
+                        display(head);
+                        break;
+                 case 10:head=sort(head);
+                         display(head);
+                        break;
+                case 11:head=link(head,head1,head2,head3);
+
+                        break;
+
+                default: printf("INVALID CHOICE\n");
+            }
+}
+return 0;
+}
